@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 '''Module for typed annotations'''
 from typing import Tuple, List
+
+
 def zoom_array(lst: Tuple, factor: int = 2) -> List:
     '''Function for typed annotations'''
     zoomed_in: List = [
