@@ -39,7 +39,8 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_org.return_value = ['u', 'will', 'always', 'be', 'my', 'fan']
             result = GithubOrgClient.public_repos()
             self.assertEqual(
-                result, ['u'    , 'will', 'always', 'be', 'my', 'fan'])
+                result, ['u', 'will', 'always', 'be', 'my', 'fan'])
+
 
 if __name__ == '__main__':
     unittest.main()
