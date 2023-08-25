@@ -31,6 +31,15 @@ class TestGithubOrgClient(unittest.TestCase):
             result = GithubOrgClient._public_repos_url()
             self.assertEqual(result, {"payload": True})
 
+    def test_public_repos(self):
+        '''Function to test public_repos'''
+        with mock.patch(
+            'client.GithubOrgClient.public_repos'
+        ) as mock_org:
+            mock_org.return_value = ['u', 'will', 'always', 'be', 'my', 'fan']
+            result = GithubOrgClient.public_repos()
+            self.assertEqual(
+                result, ['u'    , 'will', 'always', 'be', 'my', 'fan'])
 
 if __name__ == '__main__':
     unittest.main()
