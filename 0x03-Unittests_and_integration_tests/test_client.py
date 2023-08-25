@@ -23,21 +23,14 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get.assert_called_once()
 
     def test_public_repos_url(self):
-        """Test public repos url"""
-        with mock.patch('client.GithubOrgClient._public_repos_url')\
-                as mock_method:
-            mock_method.return_value = 'github.com'
-            self.assertEqual(GithubOrgClient._public_repos_url(), 'github.com')
-
-
-'''
-    def test_public_repos_url(self):
-        \'\'\'Function to test public_repos_url ''\'
-       with mock.patch('client.GithubOrgClient._public_repos_url') as mock_org:
+        '''Function to test public_repos_url '''
+        with mock.patch(
+            'client.GithubOrgClient._public_repos_url'
+        ) as mock_org:
             mock_org.return_value = {"payload": True}
             result = GithubOrgClient._public_repos_url()
             self.assertEqual(result, {"payload": True})
-'''
+
 
 if __name__ == '__main__':
     unittest.main()
