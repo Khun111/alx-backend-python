@@ -41,6 +41,13 @@ class TestGithubOrgClient(unittest.TestCase):
             self.assertEqual(
                 result, ['u', 'will', 'always', 'be', 'my', 'fan'])
 
-
+        @parameterized.expand([
+            ({"license": {"key": "my_license"}}, "my_license", True),
+            ({"license": {"key": "other_license"}}, "my_license", False)
+        ])
+        def test_has_license(licenses, license_key, expected):
+            '''Test for has_license'''
+            result = GithubOrgClient.has_license(licenses, license_key)
+            self.assertEqual(result, expected)
 if __name__ == '__main__':
     unittest.main()
