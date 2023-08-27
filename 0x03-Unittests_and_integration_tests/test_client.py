@@ -2,9 +2,10 @@
 '''Module for test_client'''
 import unittest
 from unittest import mock
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from client import GithubOrgClient
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
+from fixtures import TEST_PAYLOAD
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -49,6 +50,46 @@ class TestGithubOrgClient(unittest.TestCase):
         '''Test for has_license'''
         result = GithubOrgClient.has_license(licenses, license_key)
         self.assertEqual(result, expected)
+
+
+@parameterized_class(
+    ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'),
+    [(TEST_PAYLOAD[0][0], TEST_PAYLOAD[0][1], TEST_PAYLOAD[0][2],
+        TEST_PAYLOAD[0][3])]
+)
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    '''Integration tests for punlic repos'''
+    @classmethod
+    def setUpClass(cls):
+        '''Setup class method'''
+        payloads = {
+            "https://api.github.com/orgs/google": cls.org_payload,
+            "https://api.github.com/orgs/google/repos": cls.repos_payload,
+        }
+
+        def side_effect(url):
+            '''Side effect function'''
+            if url in payloads:
+                return MagicMock(**{'json.return_value': payloads[url]})
+        cls.get_patcher = patch('requests.get', side_effect=side_effect)
+        cls.mock_get = cls.get_patcher.start()
+
+    @classmethod
+    def tearDownClass(cls):
+        '''Class for tearDown'''
+        cls.get_patcher.stop()
+
+    def test_public_repos(self):
+        '''Test repos without license'''
+        git_client = GithubOrgClient("google")
+        result = git_client.public_repos()
+        self.assertEqual(result, self.expected_repos)
+
+    def test_public_repos(self):
+        '''Test repos with license'''
+        git_client = GithubOrgClient("google")
+        result = git_client.public_repos("apache-2.0")
+        self.assertEqual(result, self.apache2_repos)
 
 
 if __name__ == '__main__':
